@@ -6,7 +6,7 @@
 #include "Teacher.h"
 #include "Staff.h"
 #include "Card.h"
-
+#include "CourseInfo.h"
 
 UMyGameInstance::UMyGameInstance()
 {
@@ -19,60 +19,37 @@ void UMyGameInstance::Init()
 {
     Super::Init();
 
-    
+    //학사정보 객체 생성
+    CourseInfo = NewObject<UCourseInfo>(this);
+
     UE_LOG(LogTemp, Log, TEXT("============"));
-    TArray<UPerson*> Persons =
-    {
-        NewObject<UStudent>(),
-        NewObject<UTeacher>(),
-        NewObject<UStaff>(),
-    };
+    
+    //3개의 학생 객체 생성, newobject안에 비어있으면 임시객체로 생성됨
+    UStudent* Student1 = NewObject<UStudent>();
+    Student1->SetName(TEXT("학생 1"));
+    
+    UStudent* Student2 = NewObject<UStudent>();
+    Student2->SetName(TEXT("학생 2"));
+    
+    UStudent* Student3 = NewObject<UStudent>();
+    Student3->SetName(TEXT("학생 3"));
+    
+    UStaff* Staff1 = NewObject<UStaff>();
+    Staff1->SetName(TEXT("스태프 1"));
 
-    //범위 기반 루프 활용 이름 출력
-    for (const auto Person : Persons)
-    {
-        UE_LOG(LogTemp, Log, TEXT("구성원 이름 : %s"), *Person->GetName());
-    }
+    //학사 정보 객체와 학생 객체의 연결
+    //발행 주체와 구독 주체의 연결(여기서는 의존성을 피할 수 없음)
+    //MyGameInstance는 일종의 관리자(매니저) 성격의 객체
+    //지금은 GameInstance에서 코드를 처리하고 있지만 액터에서도 가능
 
-    //인터페이스 구현 여부에 따른 수업 참여 구분
-    //구현 여부 확인하는 방법 -> 해당 인터페이스로 형변환(다운캐스팅)
-    //다운캐스팅 RTTI
-    for (const auto Person : Persons)
-    {
-        ILessonInterface* LessonInterface = Cast<ILessonInterface>(Person);
-        
-        //형변환 성공하면 구현된 것, 실패하면 구현 안된것
-        if (LessonInterface)
-        {
-            UE_LOG(LogTemp, Log, TEXT("%s님은 수업에 참여할 수 있습니다"), *Person->GetName());
-            LessonInterface->DoLesson();
-        }
-        else
-        {
-            UE_LOG(LogTemp, Log, TEXT("%s님은 수업에 참여할 수 없습니다"), *Person->GetName());
-        }
+    //구독 처리
+    CourseInfo->OnChanged.AddUObject(Student1, &UStudent::GetNotification);
+    CourseInfo->OnChanged.AddUObject(Student2, &UStudent::GetNotification);
+    CourseInfo->OnChanged.AddUObject(Student3, &UStudent::GetNotification);
 
-    }
+    CourseInfo->OnChanged.AddUObject(Staff1, &UStaff::GetNotification);
 
-    //구성원의 카드 타입 출력
-    for (const auto Person : Persons)
-    {
-        const UCard* OwnCard = Person->GetCard();
-        ensure(OwnCard);
-
-        //OwnCard->GetCardType();
-
-        const UEnum* CardEnumType = FindObject<UEnum>(nullptr, TEXT("/Script/UEPart1.ECardType"));
-
-        if (CardEnumType)
-        {
-            //GetDisplayNameTextByValue는 ftext 반환
-            //fstring으로 변환할 때는 Tostring 함수 사용
-            FString CardMetaData = CardEnumType->GetDisplayNameTextByValue((int64)OwnCard->GetCardType()).ToString();
-        
-            UE_LOG(LogTemp, Log, TEXT("%s님이 소유한 카드 종류 : %s"), *Person->GetName(), *CardMetaData);
-        }
-    }
+    CourseInfo->ChangeCourseInfo(SchoolName, TEXT("변경된 학사 정보"));
 
     UE_LOG(LogTemp, Log, TEXT("============"));
 

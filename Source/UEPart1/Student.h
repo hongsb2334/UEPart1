@@ -16,11 +16,14 @@ class UEPART1_API UStudent : public UPerson, public ILessonInterface
 	GENERATED_BODY()
 	
 public:
-    UStudent();
+	UStudent();
+
+	//알림 메시지 수신할 함수 선언
+	void GetNotification(const FString& School, const FString& NewCourseInfo);
 
 private:
 
-    // Inherited via ILessonInterface
-    virtual void DoLesson() override;
+	// Inherited via ILessonInterface
+	virtual void DoLesson() override;
 
 };

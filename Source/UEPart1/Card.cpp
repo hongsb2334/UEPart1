@@ -8,4 +8,5 @@ UCard::UCard()
     //기본 값 설정
     CardType = ECardType::Invalid;
     Id = 0;
+    
 }

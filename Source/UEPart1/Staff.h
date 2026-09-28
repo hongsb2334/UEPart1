@@ -12,10 +12,12 @@
 UCLASS()
 class UEPART1_API UStaff : public UPerson
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
 	UStaff();
 
-    
+	//알림 메시지 수신할 함수 선언
+	void GetNotification(const FString& School, const FString& NewCourseInfo);
+	
 };

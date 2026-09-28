@@ -21,7 +21,16 @@ public:
 	//게임인스턴스 초기화 함수
 	virtual void Init() override;
 
+
+
 private:
+
+    //학사 정보 발행 객체
+    UPROPERTY()
+    TObjectPtr<class UCourseInfo> CourseInfo;
+    
     UPROPERTY()
     FString SchoolName;
+
+
 };

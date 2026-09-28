@@ -14,6 +14,13 @@ UStudent::UStudent()
 
 }
 
+void UStudent::GetNotification(const FString& School, const FString& NewCourseInfo)
+{
+    UE_LOG(LogTemp, Log, TEXT("[Student] %s 님이 %s로부터 받은 메시지: %s"), *Name, *School, *NewCourseInfo);
+}
+
+
+
 void UStudent::DoLesson()
 {
     ILessonInterface::DoLesson();
