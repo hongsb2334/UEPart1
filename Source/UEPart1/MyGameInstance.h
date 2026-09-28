@@ -6,6 +6,44 @@
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
+//학생 데이터를 관리할 구조체 선언
+USTRUCT()
+struct FStudentData
+{
+    GENERATED_BODY()
+    
+    FStudentData()
+    {
+        Name = TEXT("홍길동");
+        Order = -1;
+    }
+
+    FStudentData(const FString& InName, int32 InOrder) : Name(InName), Order(InOrder)
+    {
+    }
+
+    //TSet에 구조체를 저장하기 위해 필요한 함수/연산자 구현
+    bool operator==(const FStudentData& InOther) const
+    {
+        return Order == InOther.Order;
+    }
+
+    //외부의 함수를 내부에 구현
+    friend FORCEINLINE int32 GetTypeHash(const FStudentData& InStudentData)
+    {
+        return GetTypeHash(InStudentData.Name);
+    }
+
+
+
+    UPROPERTY()
+    FString Name;
+
+    UPROPERTY()
+    int32 Order;
+
+};
+
 /**
  * 
  */
@@ -18,9 +56,21 @@ public:
     //생성자
     UMyGameInstance();
 
+
+private:
+
 	//게임인스턴스 초기화 함수
 	virtual void Init() override;
+private:
+    //학생 데이터를 배열로 관리
+    TArray<FStudentData> StudentsData;
 
+    //TArray로 UObject 타입을 관리할 .때는 UPROPERTY() 매크로 필수
+    TArray<TObjectPtr<class UStudent>> Students;
+
+    TMap<int32, FString> StudentsMap;
+
+    
 
 
 private:
@@ -29,8 +79,9 @@ private:
     UPROPERTY()
     TObjectPtr<class UCourseInfo> CourseInfo;
     
-    UPROPERTY()
-    FString SchoolName;
+    //UPROPERTY()
+    //FString SchoolName;
+
 
 
 };
