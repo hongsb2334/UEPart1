@@ -47,6 +47,11 @@ struct FStudentData
 /**
  * 
  */
+
+//전방선언
+class UStudent;
+class FStudentManager;
+
 UCLASS()
 class UEPART1_API UMyGameInstance : public UGameInstance
 {
@@ -61,17 +66,25 @@ private:
 
 	//게임인스턴스 초기화 함수
 	virtual void Init() override;
+
+    //게임인스턴스 종료 함수
+    virtual void Shutdown() override;
+
+
+
+
 private:
-    //학생 데이터를 배열로 관리
-    TArray<FStudentData> StudentsData;
+    TObjectPtr<UStudent> NonPropStudent;
 
-    //TArray로 UObject 타입을 관리할 .때는 UPROPERTY() 매크로 필수
-    TArray<TObjectPtr<class UStudent>> Students;
+    UPROPERTY()
+    TObjectPtr<UStudent> PropStudent;
+        
+    TArray<TObjectPtr<UStudent>> NonPropStudents;
 
-    TMap<int32, FString> StudentsMap;
+    UPROPERTY()
+    TArray<TObjectPtr<UStudent>> PropStudents;
 
-    
-
+    FStudentManager* StudentManager = nullptr;
 
 private:
 
