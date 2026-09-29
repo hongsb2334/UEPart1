@@ -31,7 +31,17 @@ struct FStudentData
     //외부의 함수를 내부에 구현
     friend FORCEINLINE int32 GetTypeHash(const FStudentData& InStudentData)
     {
-        return GetTypeHash(InStudentData.Name);
+        return GetTypeHash(InStudentData.Order);
+    }
+
+    //연산자 오버로딩 - 편의 목적
+    friend FArchive& operator<<(FArchive& Archive, FStudentData& InStudentData)
+    {
+        //직렬화
+        Archive << InStudentData.Order;
+        Archive << InStudentData.Name;
+
+        return Archive;
     }
 
 
@@ -67,33 +77,10 @@ private:
 	//게임인스턴스 초기화 함수
 	virtual void Init() override;
 
-    //게임인스턴스 종료 함수
-    virtual void Shutdown() override;
-
-
-
-
-private:
-    TObjectPtr<UStudent> NonPropStudent;
-
-    UPROPERTY()
-    TObjectPtr<UStudent> PropStudent;
-        
-    TArray<TObjectPtr<UStudent>> NonPropStudents;
-
-    UPROPERTY()
-    TArray<TObjectPtr<UStudent>> PropStudents;
-
-    FStudentManager* StudentManager = nullptr;
-
 private:
 
-    //학사 정보 발행 객체
     UPROPERTY()
-    TObjectPtr<class UCourseInfo> CourseInfo;
-    
-    //UPROPERTY()
-    //FString SchoolName;
+    TObjectPtr<class UStudent> StudentSrc;
 
 
 

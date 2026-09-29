@@ -6,25 +6,17 @@
 
 UStudent::UStudent()
 {
-    //값 설정
-    Name = TEXT("학생");
-
-    //카드 타입 설정
-    Card->SetCardType(ECardType::Student);
-
+    Order = -1;
+    Name = TEXT("홍길동");
 }
 
-void UStudent::GetNotification(const FString& School, const FString& NewCourseInfo)
+void UStudent::Serialize(FArchive& Ar)
 {
-    UE_LOG(LogTemp, Log, TEXT("[Student] %s 님이 %s로부터 받은 메시지: %s"), *Name, *School, *NewCourseInfo);
+    Super::Serialize(Ar);
+
+    //직렬화
+    Ar << Order;
+    Ar << Name;
 }
 
-
-
-void UStudent::DoLesson()
-{
-    ILessonInterface::DoLesson();
-
-    UE_LOG(LogTemp, Log, TEXT("%s님이 수업을 수강합니다. "), *Name);
-}
 
